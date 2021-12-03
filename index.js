@@ -1,41 +1,28 @@
-require('./infraestructura/conectionDB')
-const ProjectModel = require('./model/proyectoModel')
-const express = require ('express');
-const { response } = require('express');
 
-const api = express();
-const projectaguas = new ProjectModel({
-    nombre: 'Proyecto Agua Potable Nariño',
-    lider: 'Juan',
-    facultad: 'Electronica'
-})
+require ('./infraestructura/conectionDB')
+const express = require ('express')
+const { ApolloServer } = require ('apollo-server-express')
+const typeDefs = require('./typeDef')
+const resolvers = require('./resolver')
 
-projectaguas.save((err,document)=>{
-   if(err){
-       console.log(err);
-       return;
-   }
-})
-
-/*projectaguas.save((err, document) => {
-    if (err) {
-        console.log(err);
-        return;
-    }
-})
-*/
-
-const consultaProyectos = async () => {
-   return await ProjectModel.find({})
-
-}
-
-api.get('/proyectos', (request,response) => {
-    consultaProyectos().then(function (resultado){
-        response.json({ projects: resultado })
+const iniciarServidor = async ()=> {
+    const api = express();
+    const apollo = new ApolloServer(
+        {
+             typeDefs,
+             resolvers 
+        });
+    
+    await apollo.start()
+    apollo.applyMiddleware({ app:api })
+    api.use((request, response) => {
+        response.send ('Hola')
     })
+    api.listen('9094', () => console.log('inicie servidor'))
+}
+iniciarServidor()
 
-})
 
-api.listen('9093')
+
+
 
