@@ -2,7 +2,7 @@ const {Schema, model} = require('mongoose')
 
 const usuario = new Schema ({
 
-    nombre: {
+    nombre_completo: {
         type: String,
         required: true
     },
@@ -11,15 +11,19 @@ const usuario = new Schema ({
         unique: true,
         required: true
     },
-    perfil: {
+    tipo_usuario: {
         type: String,
         required: true
     },
     estado: {
         type:String,
-        default: "Inactivo"
+        default: "Pendiente"
     },
     clave: {
+        type: String,
+        required: true
+    },
+    email: {
         type: String,
         required: true
     }
